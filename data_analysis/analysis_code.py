@@ -46,9 +46,9 @@ gram_day_week[gram_day_week["holiday"] == True]
 
 fig, ax= plt.subplots(figsize=(8,4))
 x1 = gram_day_week[(gram_day_week["day_name"] != "Sunday") & (gram_day_week["day_name"] != "Saturday") 
-                  & (gram_day_week["holiday"] == False)]["出荷日"]
+                  & (gram_day_week["holiday"] == False) & (gram_day_week["出荷日"] != "2022-05-02 00:00:00")]["出荷日"]
 y1 = gram_day_week[(gram_day_week["day_name"] != "Sunday") & (gram_day_week["day_name"] != "Saturday") 
-                  & (gram_day_week["holiday"] == False)]["重量"]
+                  & (gram_day_week["holiday"] == False) & (gram_day_week["出荷日"] != "2022-05-02 00:00:00")]["重量"]
 
 x = gram_day_week[(gram_day_week["day_name"] == "Saturday") & (gram_day_week["holiday"] == False)]["出荷日"]
 y = gram_day_week[(gram_day_week["day_name"] == "Saturday") & (gram_day_week["holiday"] == False)]["重量"]
