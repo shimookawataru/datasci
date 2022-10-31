@@ -60,5 +60,49 @@ ax.ticklabel_format(style="sci",  axis="y",scilimits=(0,0))
 plt.yticks(fontsize=10)
 plt.xticks(fontsize=8)
 # plt.xlim(20220501,)
+#per month
+shukka = df1["出荷日"]
+gram = df1["重量"]
+shukka_day = pd.to_datetime(df1['出荷日'],format='%Y%m%d')
+gram_day = pd.concat([shukka_day,df1['重量']],axis=1)
+gram_day = gram_day.set_index(["出荷日"])
+gram_day = gram_day.resample('D').sum()
+gram_day = gram_day[gram_day.index.month==6]
+gram_day_graph = gram_day.reset_index(["出荷日"])
+# gram_day_graph["出荷日"]
+fig, ax= plt.subplots(figsize=(4,8))
+ax.set_ylabel("date",fontsize=15)
+ax.set_xlabel("weight (kg)",fontsize=15)
+ax.barh(gram_day_graph["出荷日"],gram_day_graph['重量'],color="green")#,width=0.5)
+ax.ticklabel_format(style="sci",  axis="x",scilimits=(0,0))
+ax.set_title("2022")
+ax.invert_yaxis()
+plt.yticks(fontsize=10)
+plt.xticks(fontsize=10)
+plt.xlim(0,8e5)
+ax.grid()
+plt.show()
+
+#per week
+weeks = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+for week in weeks:
+    if week == "Sunday":
+        y1 = gram_day_week[(gram_day_week["day_name"] == week)
+                  | (gram_day_week["holiday"] == True)]["重量"]
+        print(week,y1.std() / len(y1))
+        # print(week+" mean",y1.mean())
+    else:
+        y1 = gram_day_week[(gram_day_week["day_name"] == week)
+                  & (gram_day_week["holiday"] == False)
+                  & (gram_day_week["出荷日"] != "2022-05-02 00:00:00")]["重量"]
+        print(week,y1.std() / len(y1))
+        # print(week+" mean",y1.mean())
+
+y1 = gram_day_week[(gram_day_week["day_name"] != "Sunday") & (gram_day_week["day_name"] != "Saturday") 
+                  & (gram_day_week["holiday"] == False) & (gram_day_week["出荷日"] != "2022-05-02 00:00:00")]["重量"]
+
+print("weekday",y1.std() / len(y1))
+# print("total"+" mean",y1.mean())
+
 ax.grid()
 plt.show()
